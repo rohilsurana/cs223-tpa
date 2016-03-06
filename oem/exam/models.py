@@ -8,7 +8,7 @@ from django.contrib.auth.models import User
 
 class Course(models.Model):
     name = models.CharField(max_length=50)
-    faculty = models.ForeignKey(User)
+    faculty = models.ForeignKey(User, limit_choices_to={'is_staff': True})
     description = models.TextField()
 
     def __str__(self):
@@ -18,6 +18,17 @@ class Course(models.Model):
 class Test(models.Model):
     date = models.DateTimeField()
     course = models.ForeignKey(Course)
+
+    def authenticate_student_user(self,user):
+        if(hasattr(user,'Student')):
+            for c in user.Student.courses:
+                if c == self.course:
+                    return True
+                else:
+                    return False
+            return False
+        else:
+            return False
 
 
 class TestResult(models.Model):
