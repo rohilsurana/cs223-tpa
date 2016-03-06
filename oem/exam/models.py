@@ -16,20 +16,19 @@ class Course(models.Model):
 
 
 class Test(models.Model):
-    date = models.DateTimeField()
     course = models.ForeignKey(Course)
+    start_time = models.DateTimeField()
+    end_time = models.DateTimeField()
 
     def authenticate_student_user(self,user):
         if(hasattr(user,'Student')):
             for c in user.Student.courses:
                 if c == self.course:
                     return True
-                else:
-                    return False
             return False
         else:
             return False
-
+        
 
 class TestResult(models.Model):
     test = models.ForeignKey(Test, on_delete=models.CASCADE)
