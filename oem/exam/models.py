@@ -1,14 +1,14 @@
 from __future__ import unicode_literals
 
 from django.db import models
-from authentication.models import Faculty, Student
+from django.contrib.auth.models import User
 
 
 # Create your models here.
 
 class Course(models.Model):
     name = models.CharField(max_length=50)
-    faculty = models.ForeignKey(Faculty)
+    faculty = models.ForeignKey(User)
     description = models.TextField()
 
 
@@ -19,7 +19,7 @@ class Test(models.Model):
 
 class TestResult(models.Model):
     test = models.ForeignKey(Test, on_delete=models.CASCADE)
-    student = models.ForeignKey(Student)
+    student = models.ForeignKey(User)
     marks = models.FloatField()
 
     def __str__(self):
