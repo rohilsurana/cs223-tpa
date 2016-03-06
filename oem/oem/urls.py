@@ -23,6 +23,8 @@ admin.site.site_title = ugettext_lazy('Obejctive Exam Management')
 
 urlpatterns = [
     url(r'^logout/', logout_page),
+    url(r'^nested_admin/', include('nested_admin.urls')),
     url(r'^login/', include('authentication.urls')),
     url(r'^admin/', admin.site.urls),
+
 ]

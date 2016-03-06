@@ -35,7 +35,7 @@ INSTALLED_APPS = [
     # 'material.frontend',
     # 'material.admin',
     'flat',
-    'nested_inline',
+    'nested_admin',
     'django.contrib.admin',
     'django.contrib.auth',
     'django.contrib.contenttypes',
