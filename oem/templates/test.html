@@ -1,11 +1,29 @@
-<html>
-<head>
-	<title>Test</title>
-</head>
-<body>
-	<h1>
-		MOHA BITCH
-	<h1>
-	{{ form.as_p }}
-</body>
-</html> 
+{#{% load staticfiles %}#}
+{#{% extends 'base_form.html' %}#}
+{#{% include 'material/includes/material_css.html' %}#}
+{#<script src="{% static 'material/js/jquery-2.2.0.js' %}"></script>#}
+{#{% include 'material/includes/material_js.html' %}#}
+{#{% load material_form %}#}
+
+
+{% extends 'base_form.html' %}
+{% load material_form %}
+
+{% block extrahead %}
+<style type="text/css">
+    {{ form.css }}
+</style>
+{% endblock %}
+
+{% block formclass %}{{ form.blockclass|default:"col s12 m8 offset-m2 l8 offset-l2" }}{% endblock %}
+
+{% block formtitle %}{{ form.title }}{% endblock %}
+
+{% block formbody %}
+        {% form form=form %}{% endform %}
+
+{% endblock %}
+
+{#{% block formbuttons %}#}
+{#    {% include form.buttons %}#}
+{#{% endblock %}#}

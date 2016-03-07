@@ -17,7 +17,7 @@ class TestForm(forms.Form):
 
             #self.fields['question_text-' + str(counter)]
 
-            self.fields['question-' + str(counter)] = forms.ChoiceField(choices=choice_fields, widget=RadioSelect)
+            self.fields['question-' + str(counter)] = forms.ChoiceField(choices=choice_fields, widget=RadioSelect, null=True)
             self.fields['question-' + str(counter)].label = ''
 
             counter += 1

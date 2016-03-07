@@ -17,6 +17,7 @@ from django.conf.urls import url, include
 from django.contrib import admin
 from django.utils.translation import ugettext_lazy
 from authentication.views import logout_page
+from material.frontend import urls as frontend_urls
 
 admin.site.site_header = ugettext_lazy('Obejctive Exam Management')
 admin.site.site_title = ugettext_lazy('Obejctive Exam Management')
@@ -27,4 +28,5 @@ urlpatterns = [
     url(r'^login/', include('authentication.urls')),
     url(r'^admin/', admin.site.urls),
     url(r'^test/', include('exam.urls')),
+    url(r'', include(frontend_urls)),
 ]
