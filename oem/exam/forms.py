@@ -3,7 +3,7 @@ from django.forms.widgets import RadioSelect
 
 class TestForm(forms.Form):
     def __init__(self, *args, **kwargs):
-        questions = kwargs.pop('question')
+        questions = kwargs.pop('questions')
         super(TestForm, self).__init(*args, **kwargs)
         counter = 1
         for question in questions:
