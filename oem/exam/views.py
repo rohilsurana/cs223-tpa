@@ -25,7 +25,8 @@ def give_test(request, test_id):
             # process the data in form.cleaned_data as required
             # ...
             # redirect to a new URL:
-            return HttpResponseRedirect('/thanks/')
+            return submit_test(request, test_id)
+            #return HttpResponseRedirect('/thanks/')
 
     # if a GET (or any other method) we'll create a blank form
     else:
@@ -38,26 +39,30 @@ def submit_test(request, test_id):
     test_data = Test.objects.get(pk=test_id)
     question_list = test_data.question_set.all()
     correct_count = 0
+    question_number = 1
     marks = 0
 
     for question in question_list:  # looping over all questions
         choices = question.choice_set.all()
 
-        correct_index = 0
+        correct_index = 1
         for choice in choices:  # looping over all choices
             if choice.is_correct:
                 break
             else:
                 correct_index += 1
 
+        print ("correct index = ", correct_index)
         # now match if user has selected correct choice
-        if correct_index == request.POST['choice']:
+        question_string = 'question-' + str(question_number)
+        if correct_index == request.POST[question_string]:
             marks += question.marks
             correct_count += 1
             # end of matching
+        question_number += 1
 
     # save it to database
-    result = TestResult(test=test_id, student=request.user, marks=marks)
+    result = TestResult(test=Test.objects.get(pk=test_id), student=request.user, marks=marks)
     result.save()
 
     return render_to_response("test_submit.html", {"correct_count": correct_count, "marks": marks})
