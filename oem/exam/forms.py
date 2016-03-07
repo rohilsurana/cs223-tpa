@@ -9,6 +9,5 @@ class TestForm(forms.Form):
         counter = 1
         for question in questions:
             choice_fields = [(choice.id, str(choice)) for choice in question.choice_set.all()]
-            self.fields['layout']
             self.fields['question-' + str(counter)] = forms.ChoiceField(choices=choice_fields, widget=RadioSelect)
             counter += 1

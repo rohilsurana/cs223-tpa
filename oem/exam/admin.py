@@ -14,12 +14,10 @@ from . import models
 class ChoiceInlineFormset(nested_admin.formsets.NestedInlineFormSet):
     def clean(self):
         count = 0
-        print("Rohil\n")
         for form in self.forms:
             if not hasattr(form, 'cleaned_data'):
                 continue
             try:
-                print("RohiHERERERl\n")
                 if form.cleaned_data.get('is_correct'):
                     count += 1
             except AttributeError:
@@ -37,7 +35,7 @@ class ChoiceInline(nested_admin.NestedTabularInline):
     extra = 1
 
 
-class QuestionInline(nested_admin.NestedStackedInline):
+class QuestionInline(nested_admin.NestedTabularInline):
     model = models.Question
     inlines = [ChoiceInline]
     extra = 1
