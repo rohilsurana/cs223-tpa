@@ -1,12 +1,14 @@
 from django import forms
 from django.forms.widgets import RadioSelect
 
+
 class TestForm(forms.Form):
     def __init__(self, *args, **kwargs):
         questions = kwargs.pop('questions')
-        super(TestForm, self).__init(*args, **kwargs)
+        super(TestForm, self).__init__(*args, **kwargs)
         counter = 1
         for question in questions:
-            choice_fields = [x for x in question.choice_set.all()]
+            choice_fields = [(choice.id, str(choice)) for choice in question.choice_set.all()]
+            self.fields['layout']
             self.fields['question-' + str(counter)] = forms.ChoiceField(choices=choice_fields, widget=RadioSelect)
             counter += 1

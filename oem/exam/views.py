@@ -11,6 +11,10 @@ from .forms import TestForm
 def give_test(request, test_id):
     test_data = Test.objects.get(pk=test_id)
     question_list = test_data.question_set.all()
+    if not request.user.is_authenticated():
+        pass        # redirect to login page with next=test/pk
+    if not test_data.authenticate_student_user(request.user):
+        pass        # render a page with written you are unathorized to take this test
 
     # if this is a POST request we need to process the form data
     if request.method == 'POST':
@@ -27,7 +31,7 @@ def give_test(request, test_id):
     else:
         form = TestForm(questions=question_list)
 
-    return render(request, 'name.html', {'form': form})
+    return render(request, 'test.html', {'form': form})
 
 
 def submit_test(request, test_id):
