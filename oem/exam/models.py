@@ -2,7 +2,7 @@ from __future__ import unicode_literals
 
 from django.db import models
 from django.contrib.auth.models import User
-
+from django.core.exceptions import ValidationError
 
 # Create your models here.
 
@@ -19,6 +19,10 @@ class Test(models.Model):
     course = models.ForeignKey(Course)
     start_time = models.DateTimeField()
     end_time = models.DateTimeField()
+
+    def clean(self):
+        if self.start_time >= self.end_time:
+            raise ValidationError("The end time should be greater than start time of test.")
 
     def authenticate_student_user(self,user):
         if(hasattr(user,'Student')):
