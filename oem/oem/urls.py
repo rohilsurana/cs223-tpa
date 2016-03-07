@@ -26,5 +26,5 @@ urlpatterns = [
     url(r'^nested_admin/', include('nested_admin.urls')),
     url(r'^login/', include('authentication.urls')),
     url(r'^admin/', admin.site.urls),
-    url(r'^test/', include('exam.urls'))
+    url(r'^test/', include('exam.urls')),
 ]

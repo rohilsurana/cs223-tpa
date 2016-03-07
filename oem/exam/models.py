@@ -16,6 +16,7 @@ class Course(models.Model):
 
 
 class Test(models.Model):
+    name = models.CharField(max_length=100)
     course = models.ForeignKey(Course)
     start_time = models.DateTimeField()
     end_time = models.DateTimeField()
@@ -32,7 +33,9 @@ class Test(models.Model):
             return False
         else:
             return False
-        
+
+    def __str__(self):
+        return self.course.name + " - " + self.name
 
 class TestResult(models.Model):
     test = models.ForeignKey(Test, on_delete=models.CASCADE)
@@ -55,6 +58,7 @@ class Question(models.Model):
 class Choice(models.Model):
     question = models.ForeignKey(Question, on_delete=models.CASCADE)
     choice_text = models.CharField(max_length=200)
+    is_correct = models.BooleanField()
 
     def __str__(self):
         return self.choice_text

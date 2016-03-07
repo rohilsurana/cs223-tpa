@@ -2,13 +2,37 @@ from django.contrib import admin
 # from nested_inline.admin import NestedModelAdmin, NestedStackedInline, NestedTabularInline
 import nested_admin
 from django.utils.translation import ugettext_lazy
+from django.forms import forms
 from . import models
 
 
 # Register your models here.
 
+# class ChoiceInlineFormSet(nested_admin.N):
+#     pass
+
+class ChoiceInlineFormset(nested_admin.formsets.NestedInlineFormSet):
+    def clean(self):
+        count = 0
+        print("Rohil\n")
+        for form in self.forms:
+            if not hasattr(form, 'cleaned_data'):
+                continue
+            try:
+                print("RohiHERERERl\n")
+                if form.cleaned_data.get('is_correct'):
+                    count += 1
+            except AttributeError:
+                # annoyingly, if a subform is invalid Django explicity raises
+                # an AttributeError for cleaned_data
+                pass
+        if count!=1:
+            raise forms.ValidationError('Only one choice can be correct.')
+        pass
+
 
 class ChoiceInline(nested_admin.NestedTabularInline):
+    formset = ChoiceInlineFormset
     model = models.Choice
     extra = 1
 
@@ -37,7 +61,7 @@ class TestAdmin(nested_admin.NestedModelAdmin):
                 field.queryset = field.queryset.none()
 
         return field
-
+    list_display = ('__str__', 'start_time', 'end_time')
     model = models.Test
     inlines = [QuestionInline]
 
