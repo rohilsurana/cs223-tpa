@@ -1,11 +1,8 @@
-from django.shortcuts import render, render_to_response
-from django.shortcuts import get_object_or_404
+from django.shortcuts import render, render_to_response, get_object_or_404
 from django.http import HttpResponseRedirect
-from .models import Test, TestResult
+from .models import Test, TestResult, Choice
 from .forms import TestForm
 
-
-# Create your views here.
 
 # View to generate the test form for students
 def give_test(request, test_id):
@@ -26,7 +23,6 @@ def give_test(request, test_id):
             # ...
             # redirect to a new URL:
             return submit_test(request, test_id)
-            #return HttpResponseRedirect('/thanks/')
 
     # if a GET (or any other method) we'll create a blank form
     else:
@@ -36,32 +32,21 @@ def give_test(request, test_id):
 
 
 def submit_test(request, test_id):
-    test_data = Test.objects.get(pk=test_id)
-    question_list = test_data.question_set.all()
+    question_list = Test.objects.get(pk=test_id).question_set.all()
     correct_count = 0
-    question_number = 1
     marks = 0
 
     for question in question_list:  # looping over all questions
-        choices = question.choice_set.all()
-
-        correct_index = 1
-        for choice in choices:  # looping over all choices
-            if choice.is_correct:
-                break
-            else:
-                correct_index += 1
-
-        print ("correct index = ", correct_index)
         # now match if user has selected correct choice
-        question_string = 'question-' + str(question_number)
-        if correct_index == request.POST[question_string]:
+        question_string = 'question-' + str(question.pk)
+        if not question_string in request.POST:
+            continue
+        if Choice.objects.get(pk=int(request.POST[question_string])).is_correct:
             marks += question.marks
             correct_count += 1
-            # end of matching
-        question_number += 1
+            # end of checking answers
 
-    # save it to database
+    # Save it to database
     result = TestResult(test=Test.objects.get(pk=test_id), student=request.user, marks=marks)
     result.save()
 
