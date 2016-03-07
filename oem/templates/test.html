@@ -1,0 +1,23 @@
+<html>
+<head>
+	<title>My first app</title>
+</head>
+<body>
+	<h1>
+		MOHA BITCH
+	<h1>
+	<ol type="1">
+	{%for text in question_text%}
+			<li>
+				{{text}}
+				<ul type="A">
+					{{choice_array.forloop.counter0.0}}
+					{%for choice in choice_array.forloop.counter0 %}
+						<li>{{choice}}</li>
+					{% endfor %}
+				</ul>
+			</li>
+	{% endfor %}
+	</ol>
+</body>
+</html> 

@@ -44,7 +44,8 @@ class Migration(migrations.Migration):
             name='Test',
             fields=[
                 ('id', models.AutoField(auto_created=True, primary_key=True, serialize=False, verbose_name='ID')),
-                ('date', models.DateTimeField()),
+                ('start_time', models.DateTimeField()),
+                ('end_time', models.DateTimeField()),
                 ('course', models.ForeignKey(on_delete=django.db.models.deletion.CASCADE, to='exam.Course')),
             ],
         ),
