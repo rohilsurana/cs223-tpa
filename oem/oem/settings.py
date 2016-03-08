@@ -32,7 +32,6 @@ ALLOWED_HOSTS = []
 
 INSTALLED_APPS = [
     'material',
-    'material.frontend',
     'flat',
     'nested_admin',
     'django.contrib.admin',

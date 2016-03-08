@@ -16,8 +16,10 @@ Including another URLconf
 from django.conf.urls import url, include
 from django.contrib import admin
 from django.utils.translation import ugettext_lazy
+from django.conf import settings
 from authentication.views import logout_page
-from material.frontend import urls as frontend_urls
+from django.contrib.auth.views import login
+from django.conf.urls.static import static
 from .views import main_view
 
 admin.site.site_header = ugettext_lazy('Obejctive Exam Management')
@@ -26,9 +28,9 @@ admin.site.site_title = ugettext_lazy('Obejctive Exam Management')
 urlpatterns = [
     url(r'^$', main_view),
     url(r'^nested_admin/', include('nested_admin.urls')),
-    url(r'^log/', include('authentication.urls', namespace='log')),
+    url(r'^logout/', logout_page, name='logout'),
+    url(r'^login/', login, name='login'),
     url(r'^admin/', admin.site.urls),
     url(r'^test/', include('exam.urls', namespace='exam')),
-    url(r'', include(frontend_urls)),
     url(r'dafuq', main_view)
-]
+] + static(settings.STATIC_URL)

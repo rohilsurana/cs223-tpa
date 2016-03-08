@@ -8,14 +8,14 @@ from authentication.models import Student, User
 
 def main_view(request):
     if not request.user.is_authenticated():
-        return HttpResponseRedirect(reverse('log:in') + '?next=' + request.get_full_path())
+        return HttpResponseRedirect(reverse('login') + '?next=' + request.get_full_path())
     if request.user.is_staff:
         if request.user.is_superuser:
             return HttpResponseRedirect(reverse('admin:index'))
         else:
             return faculty_view(request)
     elif not hasattr(request.user, 'student'):
-        return HttpResponseRedirect(reverse('log:out'))
+        return HttpResponseRedirect(reverse('logout'))
     else:
         return student_view(request)
 

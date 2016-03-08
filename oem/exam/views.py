@@ -6,16 +6,17 @@ from .forms import TestForm
 import datetime
 
 
-
 # View to generate the test form for students
 def give_test(request, test_id):
-    test_data = Test.objects.get(pk=test_id)
+    try:
+        test_data = Test.objects.get(pk=test_id)
+    except:
+        return HttpResponseRedirect('/')
     question_list = test_data.question_set.all()
     if not request.user.is_authenticated():
-        return HttpResponseRedirect(reverse('log:in') + '?next=' + request.get_full_path())
+        return HttpResponseRedirect(reverse('login') + '?next=' + request.get_full_path())
     if not test_data.authenticate_student_user(request.user):
-        return HttpResponseRedirect('/dashboard')  # render a page with written you are unathorized to take this test
-
+        return HttpResponseRedirect('/')
 
     start_time = datetime.datetime.now()
     start_time = int(start_time.strftime("%s"))
@@ -30,7 +31,7 @@ def give_test(request, test_id):
     end_time = int(end_time.strftime("%s"))
 
     duration = end_time - start_time
-    duration = duration * 1000
+    duration *= 1000
 
     # if this is a POST request we need to process the form data
     if request.method == 'POST':
@@ -48,7 +49,7 @@ def give_test(request, test_id):
     else:
         form = TestForm(questions=question_list)
 
-    return render(request, 'test.html', {'form': form, 'duration' : duration})
+    return render(request, 'test.html', {'form': form, 'duration': duration})
 
 
 def submit_test(request, test_id, end_time):
@@ -61,7 +62,7 @@ def submit_test(request, test_id, end_time):
     submit_time = int(submit_time.strftime("%s"))
     end_time = int(end_time.strftime("%s"))
 
-    print("submit_time = ",submit_time, "end_time = ", end_time)
+    print("submit_time = ", submit_time, "end_time = ", end_time)
 
     if not (end_time + 90 < submit_time):
         for question in question_list:  # looping over all questions
@@ -75,7 +76,8 @@ def submit_test(request, test_id, end_time):
                 # end of checking answers
 
     # Save it to database
-    result = TestResult(test=Test.objects.get(pk=test_id), student=request.user, marks=marks, created_on=datetime.datetime.now())
+    result = TestResult(test=Test.objects.get(pk=test_id), student=request.user, marks=marks,
+                        created_on=datetime.datetime.now())
     result.save()
 
     return render_to_response("test_submit.html", {"correct_count": correct_count, "marks": marks})

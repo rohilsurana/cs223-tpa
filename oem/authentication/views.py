@@ -10,7 +10,8 @@ from django.shortcuts import render, render_to_response, get_object_or_404
 
 def logout_page(request):
     logout(request)
-    return HttpResponseRedirect('/')
+    return render(request, 'registration/logged_out.html')
+
 
 def dashboard(request):
     return render_to_response("test_submit.html", {"correct_count": 1, "marks": 100})
