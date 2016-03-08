@@ -24,7 +24,7 @@ def give_test(request, test_id):
     actual_start_time = int(actual_start_time.strftime("%s"))
 
     if start_time < actual_start_time:
-        pass    #REDIRECT to Dashboard
+        return HttpResponseRedirect('/')
 
     end_time = test_data.end_time
     end_time = int(end_time.strftime("%s"))
