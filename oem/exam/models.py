@@ -4,6 +4,7 @@ from django.db import models
 from django.contrib.auth.models import User
 from django.core.exceptions import ValidationError
 
+
 # Create your models here.
 
 class Course(models.Model):
@@ -25,8 +26,8 @@ class Test(models.Model):
         if self.start_time >= self.end_time:
             raise ValidationError("The end time should be greater than start time of test.")
 
-    def authenticate_student_user(self,user):
-        if hasattr(user, 'Student'):
+    def authenticate_student_user(self, user):
+        if hasattr(user, 'student'):
             for c in user.Student.courses:
                 if c == self.course:
                     return True
@@ -36,6 +37,7 @@ class Test(models.Model):
 
     def __str__(self):
         return self.course.name + " - " + self.name
+
 
 class TestResult(models.Model):
     test = models.ForeignKey(Test, on_delete=models.CASCADE)
