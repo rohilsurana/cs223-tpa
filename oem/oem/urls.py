@@ -18,12 +18,13 @@ from django.contrib import admin
 from django.utils.translation import ugettext_lazy
 from authentication.views import logout_page
 from material.frontend import urls as frontend_urls
+from .views import main_view
 
 admin.site.site_header = ugettext_lazy('Obejctive Exam Management')
 admin.site.site_title = ugettext_lazy('Obejctive Exam Management')
 
 urlpatterns = [
-    url(r'^logout/', logout_page),
+    url(r'^$', main_view()),
     url(r'^nested_admin/', include('nested_admin.urls')),
     url(r'^log/', include('authentication.urls', namespace='log')),
     url(r'^admin/', admin.site.urls),
