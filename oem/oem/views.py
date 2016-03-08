@@ -98,7 +98,7 @@ def course_graph_view(request, course_id):
 
 def student_course_graph_view(request, course_id, student_id):
 
-    student = Student.obejects.get(pk=student_id)
+    student = Student.objects.get(pk=student_id)
     course = Course.objects.get(pk=course_id)
     test_list = Test.objects.filter(course=course).order_by('start_time').all()
     test_result = []
