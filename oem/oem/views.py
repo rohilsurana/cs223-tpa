@@ -77,7 +77,11 @@ def course_graph_view(request, course_id):
         average /= len(test_marks)
         test_average.append(average)
 
-    return render(request, 'course_graph.html', {'course_name' : course.name, 'test_list' : test_list, 'test_average' : test_average})
+    graph_data = []
+    for test_name, average in zip(test_list, test_average):
+        graph_data.append([test_name, average])
+
+    return render(request, 'lineChart.html', {'course_name' : course.name, 'data' : graph_data})
 
 
 def student_course_graph_view(request, course_id, student_id):
@@ -90,4 +94,8 @@ def student_course_graph_view(request, course_id, student_id):
     for test in test_list:
         test_result.append(TestResult.objects.filter(student=student, test=test).marks)
 
-    return render(request, 'student_course_graph.html', {'course_name' : course.name, 'test_list' : test_list, 'test_result' : test_result})
+    graph_data = []
+    for test_name, result in zip(test_list, test_result):
+        graph_data.append([test_name, result])
+
+    return render(request, 'lineChart.html', {'course_name' : course.name, 'data' : graph_data})
