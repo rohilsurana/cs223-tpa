@@ -8,11 +8,9 @@ from exam.models import Course
 # Create your models here.
 
 class User(models.Model):
-    age = models.IntegerField(default=20)
-    roll_number = models.CharField(max_length=50, primary_key=True)
     name = models.CharField(max_length=50)
     address = models.CharField(max_length=100)
-    date_of_birth = models.DateTimeField()
+    date_of_birth = models.DateField()
 
     class Meta:
         abstract = True
@@ -28,7 +26,10 @@ class Student(User):
 
 class Faculty(User):
     user = models.OneToOneField(Main_user, limit_choices_to={'is_staff': True})
-    pass
+    
+    def __str__(self):
+        return self.name
+        # return "Faculty" + str(self.id) + "-" + str(self.name)
 
 
 class Admin(User):
