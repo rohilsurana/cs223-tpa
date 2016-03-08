@@ -1,14 +1,6 @@
-{#{% load staticfiles %}#}
-{#{% extends 'base_form.html' %}#}
-{#{% include 'material/includes/material_css.html' %}#}
-{#<script src="{% static 'material/js/jquery-2.2.0.js' %}"></script>#}
-{#{% include 'material/includes/material_js.html' %}#}
-{#{% load material_form %}#}
-
-
 {% extends 'base_form.html' %}
 {% load material_form %}
-
+{% block page_title %}<a href="/">{{ form.title }}</a>{% endblock %}
 {% block extrahead %}
 <style type="text/css">
     {{ form.css }}
@@ -18,7 +10,7 @@
 
 {% block formclass %}{{ form.blockclass|default:"col s12 m8 offset-m2 l8 offset-l2" }}{% endblock %}
 
-{% block formtitle %}{{ form.title }}{% endblock %}
+{% block formtitle %}{{ "" }}{% endblock %}
 
 {% block formbody %}
 
@@ -40,7 +32,7 @@
 	</span>
 </span>
 
-<script type="text/javascript">		
+<script type="text/javascript">
 	function getTimeRemaining(endtime)
 	{
 
@@ -54,15 +46,15 @@
 		return ret;
 	}
 
-	function initializeClock(id, endtime) 
+	function initializeClock(id, endtime)
 	{
 		var clock = document.getElementById(id);
 		var daysSpan = clock.querySelector('#days');
 		var hoursSpan = clock.querySelector('#hours');
 		var minutesSpan = clock.querySelector('#minutes');
 		var secondsSpan = clock.querySelector('#seconds');
-		
-		function updateClock() 
+
+		function updateClock()
 		{
 			var t = getTimeRemaining(endtime);
 			daysSpan.innerHTML = t.days;
@@ -78,7 +70,7 @@
 				clearInterval(timeinterval);
 			}
 		}
-		
+
 		updateClock();
 		var timeinterval = setInterval(updateClock, 1000);
 	}
@@ -91,6 +83,84 @@
 
 {% endblock %}
 
-{#{% block formbuttons %}#}
-{#    {% include form.buttons %}#}
+
+{#{% extends "material/frontend/base_module.html" %}#}
+{#{% load i18n material_form %}#}
+
+{#{% block content %}#}
+{#<div class="row">#}
+{#    <div class="col s12 offset-m1 m10">#}
+{#        <div class="card">#}
+{#            <div class="card-content">#}
+{#                <span class="card-title black-text"></span>#}
+{#                 <span id="clockdiv" style="float: right;">#}
+{#	<span>#}
+{#		<span id="days"></span>#}
+{#		<span class="smalltext"> Days </span>#}
+{##}
+{#		<span id="hours"></span>#}
+{#		<span class="smalltext">:</span>#}
+{#	</span>#}
+{#	<span>#}
+{#		<span id="minutes"></span>#}
+{#		<span class="smalltext">:</span>#}
+{#	</span>#}
+{#	<span>#}
+{#		<span id="seconds"></span>#}
+{#		<span class="smalltext"></span>#}
+{#	</span>#}
+{#</span>#}
+{##}
+{#<script type="text/javascript">#}
+{#	function getTimeRemaining(endtime)#}
+{#	{#}
+{##}
+{#		var t = Date.parse(endtime) - Date.parse(new Date());#}
+{#		var seconds = Math.floor((t / 1000) % 60);#}
+{#		var minutes = Math.floor((t / 1000 / 60) % 60);#}
+{#		var hours = Math.floor((t / (1000 * 60 * 60)) % 24);#}
+{#		var days = Math.floor(t / (1000 * 60 * 60 * 24));#}
+{##}
+{#		var ret = {total:t, days:days, hours:hours, minutes:minutes, seconds:seconds};#}
+{#		return ret;#}
+{#	}#}
+{##}
+{#	function initializeClock(id, endtime)#}
+{#	{#}
+{#		var clock = document.getElementById(id);#}
+{#		var daysSpan = clock.querySelector('#days');#}
+{#		var hoursSpan = clock.querySelector('#hours');#}
+{#		var minutesSpan = clock.querySelector('#minutes');#}
+{#		var secondsSpan = clock.querySelector('#seconds');#}
+{##}
+{#		function updateClock()#}
+{#		{#}
+{#			var t = getTimeRemaining(endtime);#}
+{#			daysSpan.innerHTML = t.days;#}
+{#            if(t.days==0) {#}
+{#                daysSpan.style.visibility = False#}
+{#            }#}
+{#			hoursSpan.innerHTML = ('0' + t.hours).slice(-2);#}
+{#			minutesSpan.innerHTML = ('0' + t.minutes).slice(-2);#}
+{#			secondsSpan.innerHTML = ('0' + t.seconds).slice(-2);#}
+{##}
+{#			if (t.total <= 0)#}
+{#			{#}
+{#				clearInterval(timeinterval);#}
+{#			}#}
+{#		}#}
+{##}
+{#		updateClock();#}
+{#		var timeinterval = setInterval(updateClock, 1000);#}
+{#	}#}
+{##}
+{#	var deadline = new Date(Date.parse(new Date()) + {{duration}});#}
+{#	initializeClock('clockdiv', deadline);#}
+{##}
+{#</script>#}
+{#        {% form form=form %}{% endform %}#}
+{#            </div>#}
+{#        </div>#}
+{#    </div>#}
+{#</div>#}
 {#{% endblock %}#}
