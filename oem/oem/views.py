@@ -21,11 +21,12 @@ def main_view(request):
 
 
 def faculty_view(request):
+    faculty_name = request.user.name
     faculty_courses = request.user.course_set.all()
 
-    faculty_students = Student.objects.filter(courses__in=faculty_courses).order_by('username')
+    #faculty_students = Student.objects.filter(courses__in=faculty_courses).order_by('username')
 
-    return render(request, 'base.html')
+    return render(request, 'faculty_view.html', {'faculty_name' : faculty_name, 'faculty_courses' : faculty_courses})
 
 
 def faculty_course_view(request, course):
@@ -41,11 +42,7 @@ def faculty_course_view(request, course):
             mark = TestResult.objects.filter(student=student, test=test).marks
             mark_list[index].append(mark)
         index += 1
-
-
-def graph_view(request):
-    pass
-
+    return render(request, 'faculty_view.html', {'course_name' : course.name, 'student_list' : student_list, 'marks' : mark_list, 'tests' : test_list})
 
 def student_view(request):
 
@@ -64,3 +61,6 @@ def student_view(request):
     return render(request, 'student_view.html', {'student_name' : student_name, 'student_courses' : student_courses,
                                                  'student_result' : students_results})
 
+
+def graph_view(request):
+    pass
