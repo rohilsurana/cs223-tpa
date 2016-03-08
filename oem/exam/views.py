@@ -1,6 +1,7 @@
 from django.shortcuts import render, render_to_response, get_object_or_404
 from django.http import HttpResponseRedirect
 from .models import Test, TestResult, Choice
+from django.core.urlresolvers import reverse
 from .forms import TestForm
 
 
@@ -9,9 +10,9 @@ def give_test(request, test_id):
     test_data = Test.objects.get(pk=test_id)
     question_list = test_data.question_set.all()
     if not request.user.is_authenticated():
-        pass        # redirect to login page with next=test/pk
+        return HttpResponseRedirect(reverse('log:in') + '?next=' + request.get_full_path())
     if not test_data.authenticate_student_user(request.user):
-        pass        # render a page with written you are unathorized to take this test
+        return HttpResponseRedirect('/')  # render a page with written you are unathorized to take this test
 
     # if this is a POST request we need to process the form data
     if request.method == 'POST':
