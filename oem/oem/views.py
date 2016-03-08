@@ -2,7 +2,7 @@ from django.shortcuts import render, render_to_response, get_object_or_404
 from django.http import HttpResponseRedirect
 from django.core.urlresolvers import reverse
 
-from exam.models import Test, Course
+from exam.models import Test, Course, TestResult
 from authentication.models import Student, User
 
 
@@ -21,11 +21,30 @@ def main_view(request):
 
 
 def faculty_view(request):
-    faculty_courses = request.user.courses_set.all()
+    faculty_courses = request.user.course_set.all()
 
     faculty_students = Student.objects.filter(courses__in=faculty_courses).order_by('username')
 
     return render(request, 'base.html')
+
+
+def faculty_course_view(request, course):
+
+    student_list = course.student_set.all()         # list of all student attending that course
+    mark_list = [[]]                                  # 2d array of student's marks, ith row of this array stores marks obtained by ith student in all the tests
+
+    index = 0
+    test_list = Test.objects.filter(course=course).order_by('start_time')
+    for student in student_list:
+        mark_list.append([])
+        for test in test_list:
+            mark = TestResult.objects.filter(student=student, test=test).marks
+            mark_list[index].append(mark)
+        index += 1
+
+
+def graph_view(request):
+    pass
 
 def student_view(request):
 
