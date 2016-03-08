@@ -26,8 +26,8 @@ class Test(models.Model):
             raise ValidationError("The end time should be greater than start time of test.")
 
     def authenticate_student_user(self,user):
-        if hasattr(user, 'Student'):
-            for c in user.Student.courses:
+        if hasattr(user, 'student'):
+            for c in user.student.courses.all():
                 if c == self.course:
                     return True
             return False

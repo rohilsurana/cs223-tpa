@@ -6,6 +6,7 @@ from .forms import TestForm
 import datetime
 
 
+
 # View to generate the test form for students
 def give_test(request, test_id):
     test_data = Test.objects.get(pk=test_id)
@@ -13,8 +14,7 @@ def give_test(request, test_id):
     if not request.user.is_authenticated():
         return HttpResponseRedirect(reverse('log:in') + '?next=' + request.get_full_path())
     if not test_data.authenticate_student_user(request.user):
-        pass
-        #return HttpResponseRedirect('/')  # render a page with written you are unathorized to take this test
+        return HttpResponseRedirect('/dashboard')  # render a page with written you are unathorized to take this test
 
 
     start_time = datetime.datetime.now()
