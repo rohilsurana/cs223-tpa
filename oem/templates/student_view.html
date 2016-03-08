@@ -1,15 +1,19 @@
-<html>
-  <head>
-    <title>Home</title>
-    <meta content="">
-    <style></style>
-  </head>
-  <body>
-  	<h1> Welcome {{student_name}} </h1>
-  	<h3> Courses </h3>
-  	{{course_form}}
-  	
-  	<h3> Tests </h3>
-  	{{test_form}}
-  </body>
-</html>
+{% extends "material/frontend/base_module.html" %}
+{% load i18n material_form %}
+
+{% block content %}
+<div class="row">
+    <div class="col s12 offset-m1 m10">
+        <div class="card">
+            <div class="card-content">
+                <h1> Welcome {{student_name}} </h1>
+                <h3> Courses </h3>
+                {{student_courses}}
+
+                <h3> Tests </h3>
+                {{student_result}}
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %}
