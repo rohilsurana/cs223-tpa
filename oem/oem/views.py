@@ -17,7 +17,7 @@ def main_view(request):
     elif not hasattr(request.user, 'student'):
         return HttpResponseRedirect(reverse('log:out'))
     else:
-        student_view(request)
+        return student_view(request)
 
 
 def faculty_view(request):

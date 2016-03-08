@@ -21,6 +21,7 @@ class Test(models.Model):
     course = models.ForeignKey(Course)
     start_time = models.DateTimeField()
     end_time = models.DateTimeField()
+    is_active = models.BooleanField(default=False)
 
     def clean(self):
         if self.start_time >= self.end_time:
