@@ -46,12 +46,21 @@ def faculty_course_view(request, course):
 def graph_view(request):
     pass
 
+
 def student_view(request):
 
+    student_name = request.user.student.name
     student_courses = request.user.student.courses.all()
 
     student_tests = Test.objects.filter(course__in=student_courses).order_by('start_time').all()
+    students_results = []
 
-    students_results = request.user.testresult_set.all()
+    for test in student_tests:
+        mark = TestResult.objects.filter(student=request.user, test=test).marks
+        students_results.append(mark)
 
-    return render(request, 'base.html') # This is just a sample page add a new template for this
+    #students_results = request.user.testresult_set.all()
+
+    return render(request, 'student_view.html', {'student_name' : student_name, 'student_courses' : student_courses,
+                                                 'student_result' : students_results})
+
