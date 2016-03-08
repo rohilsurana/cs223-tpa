@@ -7,7 +7,7 @@ class TestForm(forms.Form):
         questions = kwargs.pop('questions')
         super(TestForm, self).__init__(*args, **kwargs)
         if questions:
-            self.title = questions[0].test.name
+            self.title = questions[0].test.course.name + " - " + questions[0].test.name
         for question in questions:
             choice_fields = [(choice.id, str(choice)) for choice in question.choice_set.all()]
 
