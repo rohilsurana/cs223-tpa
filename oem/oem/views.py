@@ -55,7 +55,10 @@ def student_view(request):
     students_results = []
 
     for test in student_tests:
-        mark = TestResult.objects.get(student=request.user, test=test).marks
+        try:
+            mark = TestResult.objects.get(student=request.user, test=test).marks
+        except:
+            mark = None
         students_results.append(mark)
 
     #students_results = request.user.testresult_set.all()
