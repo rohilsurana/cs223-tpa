@@ -24,10 +24,11 @@ admin.site.site_header = ugettext_lazy('Obejctive Exam Management')
 admin.site.site_title = ugettext_lazy('Obejctive Exam Management')
 
 urlpatterns = [
-    url(r'^$', main_view()),
+    url(r'^$', main_view),
     url(r'^nested_admin/', include('nested_admin.urls')),
     url(r'^log/', include('authentication.urls', namespace='log')),
     url(r'^admin/', admin.site.urls),
     url(r'^test/', include('exam.urls', namespace='exam')),
     url(r'', include(frontend_urls)),
+    url(r'dafuq', main_view)
 ]

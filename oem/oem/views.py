@@ -10,8 +10,29 @@ def main_view(request):
     if not request.user.is_authenticated():
         return HttpResponseRedirect(reverse('log:in') + '?next=' + request.get_full_path())
     if request.user.is_staff:
-        return HttpResponseRedirect(reverse('admin:index'))
-    if not hasattr(request.user, 'Student'):
+        if request.user.is_superuser:
+            return HttpResponseRedirect(reverse('admin:index'))
+        else:
+            return faculty_view(request)
+    elif not hasattr(request.user, 'student'):
         return HttpResponseRedirect(reverse('log:out'))
-    student_data = request.user.Student.courses.test_set.filter("start_date")
+    else:
+        student_view(request)
+
+
+def faculty_view(request):
+    faculty_courses = request.user.courses_set.all()
+
+    faculty_students = Student.objects.filter(courses__in=faculty_courses).order_by('username')
+
+    return render(request, 'base.html')
+
+def student_view(request):
+
+    student_courses = request.user.student.courses.all()
+
+    student_tests = Test.objects.filter(course__in=student_courses).order_by('start_time').all()
+
+    students_results = request.user.testresult_set.all()
+
     return render(request, 'base.html') # This is just a sample page add a new template for this

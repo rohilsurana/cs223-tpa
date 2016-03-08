@@ -75,7 +75,7 @@ def submit_test(request, test_id, end_time):
                 # end of checking answers
 
     # Save it to database
-    result = TestResult(test=Test.objects.get(pk=test_id), student=request.user, marks=marks)
+    result = TestResult(test=Test.objects.get(pk=test_id), student=request.user, marks=marks, created_on=datetime.datetime.now())
     result.save()
 
     return render_to_response("test_submit.html", {"correct_count": correct_count, "marks": marks})

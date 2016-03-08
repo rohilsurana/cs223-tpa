@@ -43,6 +43,7 @@ class TestResult(models.Model):
     test = models.ForeignKey(Test, on_delete=models.CASCADE)
     student = models.ForeignKey(User)
     marks = models.FloatField()
+    created_on = models.DateTimeField()
 
     def __str__(self):
         return str(self.marks)
