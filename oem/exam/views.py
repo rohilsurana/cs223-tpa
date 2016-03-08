@@ -3,6 +3,7 @@ from django.http import HttpResponseRedirect
 from .models import Test, TestResult, Choice
 from django.core.urlresolvers import reverse
 from .forms import TestForm
+import datetime
 
 
 # View to generate the test form for students
@@ -12,7 +13,24 @@ def give_test(request, test_id):
     if not request.user.is_authenticated():
         return HttpResponseRedirect(reverse('log:in') + '?next=' + request.get_full_path())
     if not test_data.authenticate_student_user(request.user):
-        return HttpResponseRedirect('/')  # render a page with written you are unathorized to take this test
+        pass
+        #return HttpResponseRedirect('/')  # render a page with written you are unathorized to take this test
+
+
+    start_time = datetime.datetime.now()
+    start_time = int(start_time.strftime("%s"))
+
+    actual_start_time = test_data.start_time
+    actual_start_time = int(actual_start_time.strftime("%s"))
+
+    if start_time < actual_start_time:
+        pass    #REDIRECT to Dashboard
+
+    end_time = test_data.end_time
+    end_time = int(end_time.strftime("%s"))
+
+    duration = end_time - start_time
+    duration = duration * 1000
 
     # if this is a POST request we need to process the form data
     if request.method == 'POST':
@@ -23,29 +41,38 @@ def give_test(request, test_id):
             # process the data in form.cleaned_data as required
             # ...
             # redirect to a new URL:
-            return submit_test(request, test_id)
+
+            return submit_test(request, test_id, test_data.end_time)
 
     # if a GET (or any other method) we'll create a blank form
     else:
         form = TestForm(questions=question_list)
 
-    return render(request, 'test.html', {'form': form})
+    return render(request, 'test.html', {'form': form, 'duration' : duration})
 
 
-def submit_test(request, test_id):
+def submit_test(request, test_id, end_time):
     question_list = Test.objects.get(pk=test_id).question_set.all()
     correct_count = 0
     marks = 0
 
-    for question in question_list:  # looping over all questions
-        # now match if user has selected correct choice
-        question_string = 'question-' + str(question.pk)
-        if not question_string in request.POST:
-            continue
-        if Choice.objects.get(pk=int(request.POST[question_string])).is_correct:
-            marks += question.marks
-            correct_count += 1
-            # end of checking answers
+    submit_time = datetime.datetime.now()
+
+    submit_time = int(submit_time.strftime("%s"))
+    end_time = int(end_time.strftime("%s"))
+
+    print("submit_time = ",submit_time, "end_time = ", end_time)
+
+    if not (end_time + 90 < submit_time):
+        for question in question_list:  # looping over all questions
+            # now match if user has selected correct choice
+            question_string = 'question-' + str(question.pk)
+            if not question_string in request.POST:
+                continue
+            if Choice.objects.get(pk=int(request.POST[question_string])).is_correct:
+                marks += question.marks
+                correct_count += 1
+                # end of checking answers
 
     # Save it to database
     result = TestResult(test=Test.objects.get(pk=test_id), student=request.user, marks=marks)
