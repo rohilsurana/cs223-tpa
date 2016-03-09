@@ -36,11 +36,14 @@ def faculty_course_view(request, course_id):
     mark_list = [[]]                                  # 2d array of student's marks, ith row of this array stores marks obtained by ith student in all the tests
 
     index = 0
-    test_list = Test.objects.filter(course=course).order_by('start_time')
+    test_list = Test.objects.filter(course=course).order_by('start_time').all()
     for student in student_list:
         mark_list.append([])
         for test in test_list:
-            mark = TestResult.objects.get(student=student, test=test).marks
+            try:
+                mark = TestResult.objects.get(student=student, test=test).marks
+            except:
+                mark = None
             mark_list[index].append(mark)
         index += 1
     return render(request, 'faculty_view.html', {'course_name' : course.name, 'student_list' : student_list, 'marks' : mark_list, 'tests' : test_list})
@@ -69,15 +72,21 @@ def student_view(request):
 
 def course_graph_view(request, course_id):
     course = Course.objects.get(pk=course_id)
-    test_list = Test.objects.filter(course=course).order_by('start_time')
+    test_list = Test.objects.filter(course=course).order_by('start_time').all()
     test_average = []
 
     for test in test_list:
-        test_marks = TestResult.objects.filter(test=test)
+
+        test_results = TestResult.objects.filter(test=test).all()
+        test_marks = []
+        for result in test_results:
+            test_marks.append(result.marks)
+
         average = 0
         for marks in test_marks:
             average += marks
-        average /= len(test_marks)
+        if len(test_marks) > 0:
+            average /= len(test_marks)
         test_average.append(average)
 
     graph_data = []
@@ -91,11 +100,16 @@ def student_course_graph_view(request, course_id, student_id):
 
     student = Student.obejects.get(pk=student_id)
     course = Course.objects.get(pk=course_id)
-    test_list = Test.objects.filter(course=course).order_by('start_time')
+    test_list = Test.objects.filter(course=course).order_by('start_time').all()
     test_result = []
 
     for test in test_list:
-        test_result.append(TestResult.objects.filter(student=student, test=test).marks)
+        try:
+            marks = TestResult.objects.get(student=student, test=test).marks
+        except:
+            marks = None
+
+        test_result.append(marks)
 
     graph_data = []
     for test_name, result in zip(test_list, test_result):
