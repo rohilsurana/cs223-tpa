@@ -2,6 +2,7 @@ from django.shortcuts import render, render_to_response, get_object_or_404
 from django.http import HttpResponseRedirect
 from .models import Test, TestResult, Choice
 from django.core.urlresolvers import reverse
+from django.utils import timezone
 from .forms import TestForm
 import datetime
 
@@ -18,12 +19,13 @@ def give_test(request, test_id):
     if not test_data.authenticate_student_user(request.user):
         return HttpResponseRedirect('/')
 
-    start_time = datetime.datetime.now()
+    start_time = timezone.now()
     start_time = int(start_time.strftime("%s"))
 
     actual_start_time = test_data.start_time
     actual_start_time = int(actual_start_time.strftime("%s"))
-
+    print(start_time)
+    print(actual_start_time)
     if start_time < actual_start_time:
         return HttpResponseRedirect('/')
 
@@ -43,7 +45,7 @@ def give_test(request, test_id):
             # ...
             # redirect to a new URL:
 
-            return submit_test(request, test_id, test_data.end_time)
+            return submit_test(request, test_id, test_data.end_time, form.title)
 
     # if a GET (or any other method) we'll create a blank form
     else:
@@ -52,7 +54,7 @@ def give_test(request, test_id):
     return render(request, 'test.html', {'form': form, 'duration': duration})
 
 
-def submit_test(request, test_id, end_time):
+def submit_test(request, test_id, end_time, title):
     question_list = Test.objects.get(pk=test_id).question_set.all()
     correct_count = 0
     marks = 0
@@ -76,8 +78,12 @@ def submit_test(request, test_id, end_time):
                 # end of checking answers
 
     # Save it to database
-    result = TestResult(test=Test.objects.get(pk=test_id), student=request.user, marks=marks,
-                        created_on=datetime.datetime.now())
-    result.save()
-
-    return render_to_response("test_submit.html", {"correct_count": correct_count, "marks": marks})
+    submitted = False
+    try:
+        result = TestResult(test=Test.objects.get(pk=test_id), student=request.user, marks=marks,
+                            created_on=datetime.datetime.now())
+        result.save()
+    except:
+        submitted = True
+    return render_to_response("test_submit.html", {"correct_count": correct_count, "marks": marks, 'request':request,
+                                                   'title': title, 'submitted': submitted})

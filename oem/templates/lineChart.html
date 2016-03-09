@@ -1,37 +1,43 @@
- <html>
-  <head>
-    <script type="text/javascript" src="https://www.gstatic.com/charts/loader.js"></script>
-    <script type="text/javascript">
+{% extends "material/frontend/base_module.html" %}
+{% load i18n material_form %}
+{% block page_title %}<a href="/">{{ course.name }}</a>{% endblock %}
+{% block content %}
+<div class="row">
+    <div class="col s12 offset-m2 m8">
+        <div class="card">
+            <div class="card-content">
+                <div style="width:100%">
+                    <div>
+                        <canvas id="canvas" ></canvas>
+                    </div>
+                </div>
+                <script>
 
-    // Change only the below data.
-      var documentID = 'myDiv'   
-      var title = {{course_name}}
-      var axisNameX = 'Tests'
-      var axisNameY = 'Marks'
-      var testData = {{data}}
-    // Change only the above data
+                    var lineChartData = {
+                        labels : [{% for testname,result in data %} "{{ testname }}", {% endfor %}],
+                        datasets : [
+                            {
+                                label: "My First dataset",
+                                fillColor : "rgba(220,220,220,0.2)",
+                                strokeColor : "rgba(220,220,220,1)",
+                                pointColor : "rgba(220,220,220,1)",
+                                pointStrokeColor : "#fff",
+                                pointHighlightFill : "#fff",
+                                pointHighlightStroke : "rgba(220,220,220,1)",
+                                data : [{% for testname,result in data %} {{ result }}, {% endfor %}]
+                            },
 
-      google.charts.load('current', {'packages':['corechart']});
-      google.charts.setOnLoadCallback(drawChart);
+                        ]
+                    }
 
-      function drawChart() {
-        var data = google.visualization.arrayToDataTable(testData);
+                    var ctx = document.getElementById("canvas").getContext("2d");
+                    window.myLine = new Chart(ctx).Line(lineChartData, {
+                        responsive: true
+                    });
 
-        var options = {
-          title: title,
-          //curveType: 'function',
-          hAxis: { title: axisNameX },
-          vAxis: { title: axisNameY },
-          legend: 'none'
-        };
-
-        var chart = new google.visualization.LineChart(document.getElementById(documentID));
-
-        chart.draw(data, options);
-      }
-    </script>
-  </head>
-  <body>
-    <div id="myDiv"></div>
-  </body>
-</html>
+                </script>
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %}

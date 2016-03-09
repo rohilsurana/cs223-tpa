@@ -51,6 +51,9 @@ class TestResult(models.Model):
     marks = models.FloatField()
     created_on = models.DateTimeField()
 
+    class Meta:
+        unique_together = ('student', 'test')
+
     def __str__(self):
         return str(self.marks)
 

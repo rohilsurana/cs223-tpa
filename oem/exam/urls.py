@@ -4,5 +4,5 @@ from . import views
 
 urlpatterns = [
     #url(r'^out/', views.logout_page),
-    url(r'^(?P<test_id>[0-9]+)/$', views.give_test),
+    url(r'^(?P<test_id>[0-9]+)/$', views.give_test, name='test'),
 ]

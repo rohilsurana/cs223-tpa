@@ -1,17 +1,21 @@
 {% extends "material/frontend/base_module.html" %}
 {% load i18n material_form %}
-{% block page_title %}<a href="/">{{ "Dashboard" }}</a>{% endblock %}
+{% block page_title %}<a href="/">{{ test.name }}</a>{% endblock %}
 {% block content %}
 <div class="row">
     <div class="col s12 offset-m3 m6">
         <div class="card">
             <div class="card-content">
-                <h4> Courses </h4>
+                <h4> Students</h4>
                 <table>
-                {% for course in faculty_courses %}
+                <tr>
+                    <th>Name</th>
+                    <th>Marks</th>
+                </tr>
+                {% for student,mark in marks %}
                     <tr>
-                    <td><a href="{% url 'facultycourse' course.pk %}">{{ course.name }}</a></td>
-                    <td>{{ course.pk }}</td>
+                    <td>{{ student }}</td>
+                    <td>{{ mark }}</td>
                     </tr>
                 {% endfor %}
                 </table>

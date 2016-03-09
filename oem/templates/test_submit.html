@@ -1,15 +1,22 @@
-<html>
-<head>
-	<title>Test Submitted</title>
-</head>
-<body>
-	<h1>
-		Test Successfully Submitted
-	<h1>
-	<p>
-		You have {{correct_count}} questions correct and your final score is {{marks}}
-	</p>
-	<!-- Dashboard, logout-->
-</body>
-</html> 
- 
+{% extends "material/frontend/base_module.html" %}
+{% load i18n material_form %}
+{% block page_title %}<a href="/">{{ title }}</a>{% endblock %}
+{% block content %}
+<div class="row">
+    <div class="col s12 offset-m3 m6">
+        <div class="card">
+            <div class="card-content">
+                <center>{% if not submitted %}
+                    <h4>Test Successfully Submitted</h4>
+                    <br>
+                    <p>
+                        You got <b>{{correct_count}}</b> questions correct and your final score is <b>{{marks}}</b>
+                    </p>{% else %}
+                    <h4>You are not allowed to give the test</h4>
+                    {% endif %}
+                </center>
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %}

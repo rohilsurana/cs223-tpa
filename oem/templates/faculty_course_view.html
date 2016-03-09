@@ -1,8 +1,87 @@
-<html>
-  <head>
-    <title></title>
-    <meta content="">
-    <style></style>
-  </head>
-  <body></body>
-</html>
+{% extends "material/frontend/base_module.html" %}
+{% load i18n material_form %}
+{% block page_title %}<a href="/">{{ course.name }}</a>{% endblock %}
+{% block content %}
+<div class="row">
+    <div class="col s12  m6">
+        <div class="card">
+            <div class="card-content">
+                <h4> Graph of average marks</h4>
+                <div style="width:100%" onready="makeGraph()">
+                    <div>
+                        <canvas id="canvas" ></canvas>
+                    </div>
+                </div>
+                <script>
+
+                    var lineChartData = {
+                        labels : [{% for testname,result in data %} "{{ testname }}", {% endfor %}],
+                        datasets : [
+                            {
+                                label: "My First dataset",
+                                fillColor : "rgba(220,220,220,0.2)",
+                                strokeColor : "rgba(220,220,220,1)",
+                                pointColor : "rgba(220,220,220,1)",
+                                pointStrokeColor : "#fff",
+                                pointHighlightFill : "#fff",
+                                pointHighlightStroke : "rgba(220,220,220,1)",
+                                data : [{% for testname,result in data %} {{ result }}, {% endfor %}]
+                            },
+
+                        ]
+                    }
+
+                    var ctx = document.getElementById("canvas").getContext("2d");
+                    window.myLine = new Chart(ctx).Line(lineChartData, {
+                        responsive: true
+                    });
+
+                </script>
+            </table>
+            </div>
+        </div>
+    </div>
+    <div class="col s12  m6">
+        <div class="card">
+            <div class="card-content">
+                <h4> Tests </h4>
+            <table>
+                {% for test in tests %}
+                <tr>
+                <td><a href="{% url 'facultytest' test.pk %}">{{ test.name }}</a></td>
+                <td><a href="{% url 'facultycourse' test.course.pk %}">{{ test.course.name }}</a></td>
+                <td>{{ test.start_time }}</td>
+                </tr>
+                {% endfor %}
+            </table>
+            </div>
+        </div>
+    </div>
+</div>
+<div class="row">
+    <div class="col s12  m12">
+        <div class="card">
+            <div class="card-content">
+                <h4> Students </h4>
+                <table>
+                <tr>
+                    <th>Student Name</th>
+                    {% for test in tests %}
+                    <th>{{ test.name }}</th>
+                    {% endfor %}
+                </tr>
+                {% for student, mark_list in marks %}
+                    <tr>
+                    <td><a href="{% url 'studentgraph' student.pk %}">{{ student.user.username }}</a></td>
+                    {% for marks in mark_list %}
+                        <td>{{ marks }}</td>
+                    {% endfor %}
+
+                    </tr>
+                {% endfor %}
+                </table>
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %}
