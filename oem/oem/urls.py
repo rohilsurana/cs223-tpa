@@ -32,5 +32,5 @@ urlpatterns = [
     url(r'^login/', login, name='login'),
     url(r'^admin/', admin.site.urls),
     url(r'^test/', include('exam.urls', namespace='exam')),
-    url(r'dafuq', main_view)
+
 ] + static(settings.STATIC_URL)

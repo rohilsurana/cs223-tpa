@@ -26,6 +26,8 @@ class Test(models.Model):
     def clean(self):
         if self.start_time >= self.end_time:
             raise ValidationError("The end time should be greater than start time of test.")
+        if self.is_active:
+            self.send_mail()
 
     def authenticate_student_user(self,user):
         if hasattr(user, 'student'):
@@ -35,6 +37,9 @@ class Test(models.Model):
             return False
         else:
             return False
+
+    def send_mail(self):
+        pass
 
     def __str__(self):
         return self.course.name + " - " + self.name
