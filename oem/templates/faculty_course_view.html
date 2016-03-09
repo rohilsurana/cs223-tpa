@@ -71,9 +71,10 @@
                     {% endfor %}
                 </tr>
                 {% for student, mark_list in marks %}
+
                     <tr>
-                    <td><a href="{% url 'studentgraph' student.pk %}">{{ student.user.username }}</a></td>
-                    {% for marks in mark_list %}
+                    <td><a href="{% url 'studentfacultygraph' student_id=student.pk course_id=mark_list.0.0.course.pk %}">{{ student.username }}</a></td>
+                    {% for test,marks in mark_list %}
                         <td>{{ marks }}</td>
                     {% endfor %}
 
