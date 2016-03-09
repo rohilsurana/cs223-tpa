@@ -3,6 +3,7 @@ from __future__ import unicode_literals
 from django.db import models
 from django.contrib.auth.models import User
 from django.core.exceptions import ValidationError
+from django.core.mail import send_mail
 
 
 # Create your models here.
@@ -27,7 +28,7 @@ class Test(models.Model):
         if self.start_time >= self.end_time:
             raise ValidationError("The end time should be greater than start time of test.")
         if self.is_active:
-            self.send_mail()
+            self.send_mail_us(self.course)
 
     def authenticate_student_user(self,user):
         if hasattr(user, 'student'):
@@ -38,8 +39,11 @@ class Test(models.Model):
         else:
             return False
 
-    def send_mail(self):
-        pass
+    def send_mail_us(self, course):
+        txt = "Course" + course.name + "has been updated with a test."
+        students = course.student_set.values_list('email', flat=True)
+        send_mail("FROM Objective Exam Management Application", txt,"us@example.com",students)
+
 
     def __str__(self):
         return self.course.name + " - " + self.name

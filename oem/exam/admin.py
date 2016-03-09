@@ -42,11 +42,13 @@ class QuestionInline(nested_admin.NestedTabularInline):
 
 
 class TestAdmin(nested_admin.NestedModelAdmin):
+
     def get_queryset(self, request):
         qs = super(TestAdmin, self).get_queryset(request)
         if request.user.is_superuser:
             return qs
         return qs.filter(course__faculty__exact=request.user)
+
 
     def formfield_for_foreignkey(self, db_field, request=None, **kwargs):
 
