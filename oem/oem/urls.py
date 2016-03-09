@@ -20,7 +20,7 @@ from django.conf import settings
 from authentication.views import logout_page
 from django.contrib.auth.views import login
 from django.conf.urls.static import static
-from .views import main_view
+from .views import main_view, student_course_graph_view, faculty_course_view, course_graph_view
 
 admin.site.site_header = ugettext_lazy('Obejctive Exam Management')
 admin.site.site_title = ugettext_lazy('Obejctive Exam Management')
@@ -32,5 +32,10 @@ urlpatterns = [
     url(r'^login/', login, name='login'),
     url(r'^admin/', admin.site.urls),
     url(r'^test/', include('exam.urls', namespace='exam')),
+    url(r'^graph/student/(?P<course_id>[0-9]+)/(?P<student_id>[0-9]+)/$', student_course_graph_view),
+    url(r'^graph/course/(?P<course_id>[0-9]+)/$', course_graph_view),
+    url(r'^course/(?P<course_id>[0-9]+)/$', faculty_course_view),
+
+
 
 ] + static(settings.STATIC_URL)
