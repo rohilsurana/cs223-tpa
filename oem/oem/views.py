@@ -29,7 +29,8 @@ def faculty_view(request):
     return render(request, 'faculty_view.html', {'faculty_name' : faculty_name, 'faculty_courses' : faculty_courses})
 
 
-def faculty_course_view(request, course):
+def faculty_course_view(request, course_id):
+    course = Course.objects.get(pk=course_id)
 
     student_list = course.student_set.all()         # list of all student attending that course
     mark_list = [[]]                                  # 2d array of student's marks, ith row of this array stores marks obtained by ith student in all the tests
@@ -39,10 +40,11 @@ def faculty_course_view(request, course):
     for student in student_list:
         mark_list.append([])
         for test in test_list:
-            mark = TestResult.objects.filter(student=student, test=test).marks
+            mark = TestResult.objects.get(student=student, test=test).marks
             mark_list[index].append(mark)
         index += 1
     return render(request, 'faculty_view.html', {'course_name' : course.name, 'student_list' : student_list, 'marks' : mark_list, 'tests' : test_list})
+
 
 def student_view(request):
 
@@ -53,7 +55,7 @@ def student_view(request):
     students_results = []
 
     for test in student_tests:
-        mark = TestResult.objects.filter(student=request.user, test=test).marks
+        mark = TestResult.objects.get(student=request.user, test=test).marks
         students_results.append(mark)
 
     #students_results = request.user.testresult_set.all()
@@ -62,5 +64,30 @@ def student_view(request):
                                                  'student_result' : students_results})
 
 
-def graph_view(request):
-    pass
+def course_graph_view(request, course_id):
+    course = Course.objects.get(pk=course_id)
+    test_list = Test.objects.filter(course=course).order_by('start_time')
+    test_average = []
+
+    for test in test_list:
+        test_marks = TestResult.objects.filter(test=test)
+        average = 0
+        for marks in test_marks:
+            average += marks
+        average /= len(test_marks)
+        test_average.append(average)
+
+    return render(request, 'course_graph.html', {'course_name' : course.name, 'test_list' : test_list, 'test_average' : test_average})
+
+
+def student_course_graph_view(request, course_id, student_id):
+
+    student = Student.obejects.get(pk=student_id)
+    course = Course.objects.get(pk=course_id)
+    test_list = Test.objects.filter(course=course).order_by('start_time')
+    test_result = []
+
+    for test in test_list:
+        test_result.append(TestResult.objects.filter(student=student, test=test).marks)
+
+    return render(request, 'student_course_graph.html', {'course_name' : course.name, 'test_list' : test_list, 'test_result' : test_result})
