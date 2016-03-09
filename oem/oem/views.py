@@ -30,6 +30,15 @@ def faculty_view(request):
 
 
 def faculty_course_view(request, course_id):
+
+    if not request.user.is_authenticated():
+        return HttpResponseRedirect(reverse('login') + '?next=' + request.get_full_path())
+    if request.user.is_staff:
+        if request.user.is_superuser:
+            return HttpResponseRedirect(reverse('admin:index'))
+    elif hasattr(request.user, 'student'):
+        return HttpResponseRedirect(reverse('logout'))
+
     course = Course.objects.get(pk=course_id)
 
     student_list = course.student_set.all()         # list of all student attending that course
@@ -71,6 +80,15 @@ def student_view(request):
 
 
 def course_graph_view(request, course_id):
+
+    if not request.user.is_authenticated():
+        return HttpResponseRedirect(reverse('login') + '?next=' + request.get_full_path())
+    if request.user.is_staff:
+        if request.user.is_superuser:
+            return HttpResponseRedirect(reverse('admin:index'))
+    elif hasattr(request.user, 'student'):
+        return HttpResponseRedirect(reverse('logout'))
+
     course = Course.objects.get(pk=course_id)
     test_list = Test.objects.filter(course=course).order_by('start_time').all()
     test_average = []
@@ -97,6 +115,15 @@ def course_graph_view(request, course_id):
 
 
 def student_course_graph_view(request, course_id, student_id):
+
+    if not request.user.is_authenticated():
+        return HttpResponseRedirect(reverse('login') + '?next=' + request.get_full_path())
+    if request.user.is_staff:
+        if request.user.is_superuser:
+            return HttpResponseRedirect(reverse('admin:index'))
+    if not hasattr(request.user, 'student') and not request.user.is_staff:
+        return HttpResponseRedirect(reverse('logout'))
+
 
     student = Student.objects.get(pk=student_id)
     course = Course.objects.get(pk=course_id)
