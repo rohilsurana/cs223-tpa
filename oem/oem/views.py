@@ -13,14 +13,32 @@ def main_view(request):
         if request.user.is_superuser:
             return HttpResponseRedirect(reverse('admin:index'))
         else:
-            return faculty_view(request)
+            return faculty_dashboard(request)
     elif not hasattr(request.user, 'student'):
         return HttpResponseRedirect(reverse('logout'))
     else:
         return student_view(request)
 
 
+def faculty_dashboard(request):
+    faculty_name = request.user.username
+    faculty_courses = request.user.course_set.all()
+
+    #faculty_students = Student.objects.filter(courses__in=faculty_courses).order_by('username')
+
+    return render(request, 'faculty_dashboard.html')
+
+
 def faculty_view(request):
+
+    if not request.user.is_authenticated():
+        return HttpResponseRedirect(reverse('login') + '?next=' + request.get_full_path())
+    if request.user.is_staff:
+        if request.user.is_superuser:
+            return HttpResponseRedirect(reverse('admin:index'))
+    elif hasattr(request.user, 'student'):
+        return HttpResponseRedirect(reverse('logout'))
+
     faculty_name = request.user.username
     faculty_courses = request.user.course_set.all()
 

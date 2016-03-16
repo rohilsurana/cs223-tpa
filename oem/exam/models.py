@@ -41,8 +41,9 @@ class Test(models.Model):
 
     def send_mail_us(self, course):
         txt = "Course" + course.name + "has been updated with a test."
-        students = course.student_set.values_list('email', flat=True)
-        send_mail("FROM Objective Exam Management Application", txt,"us@example.com",students)
+        students = course.student_set.values_list('user', flat=True)
+        students = User.objects.filter(pk__in=students).all().values_list('email', flat=True)
+        # send_mail("FROM Objective Exam Management Application", txt,"rohilsurana96@gmail.com",students)
 
 
     def __str__(self):
