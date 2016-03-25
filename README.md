@@ -1,15 +1,15 @@
 ## Objective Exam Management
 
 ### Requirements
-Python 3
-pip
-Django==1.9.3
-django-flat-theme==1.1.3
-django-nested-admin==2.2.1
-six==1.10.0
+ - Python 3
+ - pip
+ - Django==1.9.3
+ - django-flat-theme==1.1.3
+ - django-nested-admin==2.2.1
+ - six==1.10.0
 
 ##### Optional
-virtualenv
+ - virtualenv
 
 ### Installation
  - Take time and install [python 3.x](https://docs.python.org/3.5/) and [pip](https://pip.pypa.io/en/stable/installing/)
