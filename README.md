@@ -16,7 +16,7 @@ virtualenv
  - As mentioned [virtualenv](https://virtualenv.pypa.io/en/latest/) is optional but recommended as it will help to keep your global environment clean.
  - Now clone this repository using `git clone https://github.com/rohilsurana/cs223-tpa.git`. In case you dont have git installed you can download the source zip from github page.
  - Now enter the following commands after replacing the directory path to which you have cloned the source
- ```
+```shell
 $ cd /path/to/src/
 $ virtualenv venv
 $ source venv/bin/activate
