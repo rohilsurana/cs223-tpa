@@ -26,6 +26,7 @@ from . import views
 admin.site.site_header = ugettext_lazy('Obejctive Exam Management')
 admin.site.site_title = ugettext_lazy('Obejctive Exam Management')
 
+
 urlpatterns = [
     url(r'^$', views.main_view),
     url(r'^nested_admin/', include('nested_admin.urls')),

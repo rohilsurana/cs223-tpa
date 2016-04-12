@@ -14,7 +14,9 @@ from . import models
 class ChoiceInlineFormset(nested_admin.formsets.NestedInlineFormSet):
     def clean(self):
         count = 0
+        count2 = 0
         for form in self.forms:
+            count2 += 1
             if not hasattr(form, 'cleaned_data'):
                 continue
             try:
@@ -24,8 +26,19 @@ class ChoiceInlineFormset(nested_admin.formsets.NestedInlineFormSet):
                 # annoyingly, if a subform is invalid Django explicity raises
                 # an AttributeError for cleaned_data
                 pass
-        if count!=1:
+        if count2 <=1:
+            raise forms.ValidationError('At least two choices are necessary.')
+        if count != 1:
             raise forms.ValidationError('Only one choice can be correct.')
+        pass
+
+class QuestionInlineFormset(nested_admin.formsets.NestedInlineFormSet):
+    def clean(self):
+        count = 0
+        for form in self.forms:
+            count += 1
+        if count <1:
+            raise forms.ValidationError('At least one question is necessary.')
         pass
 
 
@@ -38,17 +51,16 @@ class ChoiceInline(nested_admin.NestedTabularInline):
 class QuestionInline(nested_admin.NestedTabularInline):
     model = models.Question
     inlines = [ChoiceInline]
+    formset= QuestionInlineFormset
     extra = 1
 
 
 class TestAdmin(nested_admin.NestedModelAdmin):
-
     def get_queryset(self, request):
         qs = super(TestAdmin, self).get_queryset(request)
         if request.user.is_superuser:
             return qs
         return qs.filter(course__faculty__exact=request.user)
-
 
     def formfield_for_foreignkey(self, db_field, request=None, **kwargs):
 
@@ -61,6 +73,8 @@ class TestAdmin(nested_admin.NestedModelAdmin):
                 field.queryset = field.queryset.none()
 
         return field
+
+
     list_display = ('__str__', 'start_time', 'end_time')
     model = models.Test
     inlines = [QuestionInline]
