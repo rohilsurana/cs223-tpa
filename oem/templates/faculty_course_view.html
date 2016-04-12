@@ -49,7 +49,6 @@
                 {% for test in tests %}
                 <tr>
                 <td><a href="{% url 'facultytest' test.pk %}">{{ test.name }}</a></td>
-                <td><a href="{% url 'facultycourse' test.course.pk %}">{{ test.course.name }}</a></td>
                 <td>{{ test.start_time }}</td>
                 </tr>
                 {% endfor %}

@@ -25,7 +25,7 @@ class Student(User):
 
 class Faculty(User):
     user = models.OneToOneField(Main_user, limit_choices_to={'is_staff': True})
-    
+
     def __str__(self):
         return self.name
         # return "Faculty" + str(self.id) + "-" + str(self.name)
