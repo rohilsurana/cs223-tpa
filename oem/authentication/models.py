@@ -10,7 +10,6 @@ from exam.models import Course
 class User(models.Model):
     name = models.CharField(max_length=50)
     address = models.CharField(max_length=100)
-    date_of_birth = models.DateField()
 
     class Meta:
         abstract = True

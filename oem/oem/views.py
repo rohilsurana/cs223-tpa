@@ -4,6 +4,13 @@ from django.core.urlresolvers import reverse
 from django.contrib.auth.models import User as auth_user
 from exam.models import Test, Course, TestResult
 from authentication.models import Student, User
+import sys
+from django.views.debug import technical_404_response
+from django.views.defaults import page_not_found
+
+
+def handler404(request):
+    return render(request, '404.html')
 
 
 def main_view(request):
