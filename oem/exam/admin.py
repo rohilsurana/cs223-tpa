@@ -82,5 +82,3 @@ class TestAdmin(nested_admin.NestedModelAdmin):
 
 admin.site.register(models.Test, TestAdmin)
 admin.site.register([models.Course, models.TestResult])
-admin.site.site_header = ugettext_lazy('Objective Exam Management')
-admin.site.site_title = ugettext_lazy('Objective Exam Management')
