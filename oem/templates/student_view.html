@@ -11,7 +11,7 @@
                 {% for course in student_courses %}
                     <tr>
                     <td><a href="{% url 'studentgraph' course.pk %}">{{ course.name }}</a></td>
-                    <td>{{ course.pk }}</td>
+                    <td>{{ course.test_set.count }}</td>
                     </tr>
                 {% endfor %}
                 </table>
