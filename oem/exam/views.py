@@ -66,24 +66,26 @@ def submit_test(request, test_id, end_time, title):
 
     print("submit_time = ", submit_time, "end_time = ", end_time)
 
-    if not (end_time + 90 < submit_time):
-        for question in question_list:  # looping over all questions
-            # now match if user has selected correct choice
-            question_string = 'question-' + str(question.pk)
-            if not question_string in request.POST:
-                continue
-            if Choice.objects.get(pk=int(request.POST[question_string])).is_correct:
-                marks += question.marks
-                correct_count += 1
-                # end of checking answers
+    for question in question_list:  # looping over all questions
+        # now match if user has selected correct choice
+        question_string = 'question-' + str(question.pk)
+        if not question_string in request.POST:
+            continue
+        if Choice.objects.get(pk=int(request.POST[question_string])).is_correct:
+            marks += question.marks
+            correct_count += 1
+            # end of checking answers
 
     # Save it to database
-    submitted = False
-    try:
-        result = TestResult(test=Test.objects.get(pk=test_id), student=request.user, marks=marks,
-                            created_on=datetime.datetime.now())
-        result.save()
-    except:
-        submitted = True
-    return render_to_response("test_submit.html", {"correct_count": correct_count, "marks": marks, 'request':request,
+    submitted = True
+    if end_time + 60 >= submit_time:
+        try:
+            result = TestResult(test=Test.objects.get(pk=test_id), student=request.user, marks=marks,
+                                created_on=datetime.datetime.now())
+            result.save()
+        except:
+            submitted = False
+    else:
+        submitted = False
+    return render(request, "test_submit.html", {"correct_count": correct_count, "marks": marks,
                                                    'title': title, 'submitted': submitted})

@@ -70,7 +70,7 @@ def faculty_course_view(request, course_id):
             try:
                 mark = TestResult.objects.get(student=student, test=test).marks
             except:
-                mark = None
+                mark = 'Not Attempted'
             marks.append((test, mark))
         mark_list.append((student, marks))
         index += 1
@@ -111,7 +111,7 @@ def student_view(request):
         try:
             mark = TestResult.objects.get(student=request.user, test=test).marks
         except:
-            mark = None
+            mark = 'Not Attempted'
         students_test_results.append((test, mark))
 
     #students_results = request.user.testresult_set.all()
@@ -238,6 +238,6 @@ def faculty_test_view(request,test_id):
             mark = TestResult.objects.get(student=student, test=test).marks
         except Exception as e:
             print(e)
-            mark = None
+            mark = 'Not Attempted'
         marks.append((student,mark))
     return render(request, 'faculty_test_view.html',{'test': test, 'marks': marks})

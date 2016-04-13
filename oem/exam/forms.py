@@ -1,6 +1,8 @@
 from django import forms
+from django.contrib import admin
 from django.forms.widgets import RadioSelect
 from django.forms.models import BaseInlineFormSet
+from django.utils.translation import ugettext_lazy
 
 
 class AtLeastOneRequiredInlineFormSet(BaseInlineFormSet):
@@ -32,3 +34,7 @@ class TestForm(forms.Form):
 
             self.fields['question-' + str(question.pk)] = forms.ChoiceField(choices=choice_fields, widget=RadioSelect, label='', required=False)
             index += 1
+
+
+admin.site.site_header = ugettext_lazy('Objective Exam Management')
+admin.site.site_title = ugettext_lazy('Objective Exam Management')
